@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MainNav from "./copmonent/mainNav";
 import GlobalState from "./copmonent/globalState";
 import Image from "./copmonent/image";
+import DeleteTitle from "./copmonent/deleteTitle";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,15 @@ function App() {
     setData(newData);
   };
 
+  function handleDeleteTitle() {
+    getDataByTitle(title).data.map((d) => data[0].data.push(d));
+
+    const newData = data.filter((t) => t.title !== title);
+
+    setTitle("All");
+    setData(newData);
+  }
+
   return (
     <React.Fragment>
       <MainNav
@@ -31,6 +41,7 @@ function App() {
         title={title}
         setTitle={setTitle}
       />
+      {title !== "All" && <DeleteTitle handleDeleteTitle={handleDeleteTitle} />}{" "}
       {title && (
         <Image
           setData={handleData}

@@ -19,6 +19,8 @@ function MainNav({ titles, setTitles, title, setTitle }) {
     setInput("");
   };
 
+  //   console.log(titles);
+
   const handleTitle = (t) => {
     setTitle(t);
   };
@@ -31,23 +33,25 @@ function MainNav({ titles, setTitles, title, setTitle }) {
         {logo}
       </p>
       <ul className="navbar-nav mr-auto">
-        {titles.map((t) => (
-          <li
-            key={id++}
-            className={t.title === title ? "nav-item active" : "nav-item"}
-          >
-            <Link
-              className="nav-link"
-              to={`/${t.title}`}
-              onClick={() => handleTitle(t.title)}
+        {titles.map((t) => {
+          return (
+            <li
+              key={id++}
+              className={t.title === title ? "nav-item active" : "nav-item"}
             >
-              {t.title}
-              <span className="badge badge-primary badge-pill">
-                {t.data.length}
-              </span>
-            </Link>
-          </li>
-        ))}
+              <Link
+                className="nav-link"
+                to={`/${t.title}`}
+                onClick={() => handleTitle(t.title)}
+              >
+                {t.title}
+                <span className="badge badge-primary badge-pill">
+                  {t.data.length}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
       <form className="form my-2 my-lg-0" onSubmit={submitTitle}>
         <input

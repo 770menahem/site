@@ -8,6 +8,8 @@ const Image = ({ data, setData, titles }) => {
     setData(img, data.title, t);
   };
 
+  // console.log(data);
+
   return (
     <div className="list mx-2 row">
       {data.data.length
