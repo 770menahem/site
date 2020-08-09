@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Upload from "./Upload";
 
 function MainNav({ titles, setTitles, title, setTitle }) {
   const logo = "Myl";
@@ -15,7 +16,8 @@ function MainNav({ titles, setTitles, title, setTitle }) {
       return;
     }
 
-    setTitles([...titles, { title: input, data: [] }]);
+    // setTitles([...titles, { title: input, data: [] }]);
+    setTitles({ title: input, data: [] });
     setInput("");
   };
 
@@ -29,15 +31,19 @@ function MainNav({ titles, setTitles, title, setTitle }) {
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light">
-      <p className="navbar-brand my-auto" to="#">
+      <p className="navbar-brand my-2" to="#">
         {logo}
       </p>
       <ul className="navbar-nav mr-auto">
+        {/* {titles.length <= 1 && <Upload />} */}
+        <Upload />
         {titles.map((t) => {
           return (
             <li
               key={id++}
-              className={t.title === title ? "nav-item active" : "nav-item"}
+              className={
+                t.title === title ? "nav-item my-2 active" : "nav-item my-2"
+              }
             >
               <Link
                 className="nav-link"

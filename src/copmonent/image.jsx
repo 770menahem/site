@@ -1,31 +1,27 @@
 import React from "react";
 
-const Image = ({ data, setData, titles }) => {
-  let id = 1;
-
+const Image = ({ data: images, setData, titles }) => {
   const handleTitle = (img, t) => {
     if (!t) return;
-    setData(img, data.title, t);
+    setData(img, images.title, t);
   };
 
-  // console.log(data);
-
   return (
-    <div className="list mx-2 row">
-      {data.data.length
-        ? data.data.map((img) => (
+    <div className="list mx-auto my-2 row">
+      {images.data.length
+        ? images.data.map((img) => (
             <div
-              key={id++}
+              key={img.id}
               className="m-2"
               style={{ backgroundColor: "#e3f2fd" }}
             >
-              <img alt="q" src={img} width="50px" />
+              <img alt="q" src={img.url} width="50px" height="70px" />
               <br />
               <select onChange={(e) => handleTitle(img, e.target.value)}>
                 {["", ...titles].map(
                   (t) =>
-                    t !== data.title && (
-                      <option key={id++} value={t}>
+                    t !== images.title && (
+                      <option key={t} value={t}>
                         {t}
                       </option>
                     )

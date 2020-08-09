@@ -1,3 +1,39 @@
+body {
+  background: linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5));
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
 .list {
-  background-color: #31a503;
+  background-color: rgba(253, 245, 230, 0.8);
+  width: 70%;
+}
+
+form {
+  margin: auto;
+  text-align: center;
+}
+label input {
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 10px auto;
+  line-height: 20px;
+  font-size: 24px;
+}
+label:hover {
+  background: #aa190e;
+  color: white;
+  border: 1px solid #efb6b2;
+  border-radius: 50%;
+}
+
+.progress-bar {
+  height: 4px;
+  background-color: purple;
 }
