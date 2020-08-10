@@ -22,7 +22,7 @@ export default function Upload() {
     <form className="upload">
       <label>
         <input type="file" onChange={handleChange} />
-        <span>+</span>
+        <span className="pointer">+</span>
       </label>
       {/* {error && alert(error)} */}
       {file && <Progress file={file} setFile={setFile} />}

@@ -1,91 +1,96 @@
 import React, { useState, useEffect } from "react";
+import useFirestore from "./hooks/useFirestore";
 import MainNav from "./copmonent/mainNav";
 import Image from "./copmonent/image";
 import DeleteTitle from "./copmonent/deleteTitle";
 import "./App.css";
-import Upload from "./copmonent/Upload";
-import useFirestore from "./hooks/useFirestore";
 
 function App() {
-  const { docs } = useFirestore("All");
-  const [all, setAll] = useState({ title: "All", data: [] });
-  const [data, setData] = useState([]);
-  const datas = [all, ...data];
-  const [title, setTitle] = useState(all.title);
+  const { docs: imgDB, lastImg: lastImgDB } = useFirestore("All");
+  const [mainCategory, setMainCategory] = useState({
+    title: "All",
+    images: imgDB,
+  });
+  const [userCategories, setUserCategories] = useState([]);
+  const [currentTitle, setCurrentTitle] = useState(mainCategory.title);
+  const allCategories = [mainCategory, ...userCategories];
 
   useEffect(() => {
-    setAll({ title: "All", data: docs });
-  }, [docs]);
+    const imageInMainCategory = mainCategory.images.length;
+    const lastImage = mainCategory.images[imageInMainCategory - 1];
 
-  // useEffect(() => {
-  //   setData(
-  //     data.map((d) => {
-  //       if (d.title === "All") return all;
-  //       return d;
-  //     })
-  //   );
-  // }, [all]);
+    if (!imageInMainCategory) {
+      setMainCategory({ title: "All", images: imgDB });
+    } else if (lastImgDB && lastImgDB.id !== lastImage.id) {
+      const newImg = lastImgDB;
+      setMainCategory({
+        title: "All",
+        images: [...mainCategory.images, newImg],
+      });
+    }
+  }, [lastImgDB]);
 
-  const setDatas = (t) => {
-    setData([...data, t]);
+  const addCategory = (title) => {
+    const newCategory = { title: title, images: [] };
+    setUserCategories([...userCategories, newCategory]);
   };
 
-  const handleData = (img, prevTitle, newTitle) => {
-    const removeFrom = getDataByTitle(prevTitle).data.filter((i) => i !== img);
+  const changeCategory = (img, newCategory) => {
+    const removeFrom = getDataByTitle(currentTitle).filter((i) => i !== img);
 
-    const addedTo = getDataByTitle(newTitle).data;
+    const addedTo = getDataByTitle(newCategory);
     addedTo.push(img);
 
-    const newData = datas
-      .map((t) => {
-        if (t.title === prevTitle) return { title: t.title, data: removeFrom };
-        if (t.title === newTitle) return { title: t.title, data: addedTo };
-        return t;
+    const newCategories = allCategories
+      .map((c) => {
+        if (c.title === currentTitle)
+          return { title: c.title, images: removeFrom };
+        if (c.title === newCategory) return { title: c.title, images: addedTo };
+        return c;
       })
-      .filter((t) => (t.title !== "All" ? t : setAll(t)));
+      .filter((c) => (c.title === mainCategory.title ? setMainCategory(c) : c));
 
-    setData(newData);
+    setUserCategories(newCategories);
   };
 
-  function handleDeleteTitle() {
-    getDataByTitle(title).data.map((d) => datas[0].data.push(d));
+  function deleteCategory() {
+    getDataByTitle(currentTitle).map((img) =>
+      allCategories[0].images.push(img)
+    );
 
-    const newData = datas
-      .filter((t) => t.title !== title)
-      .filter((t) => (t.title !== "All" ? t : setAll(t)));
+    const newData = allCategories
+      .filter((t) => t.title !== currentTitle)
+      .filter((t) => (t.title !== mainCategory.title ? t : setMainCategory(t)));
 
-    setTitle("All");
-    setData(newData);
+    setCurrentTitle(mainCategory.title);
+    setUserCategories(newData);
   }
 
   const getDataByTitle = (title) => {
-    return datas.filter((d) => d.title === title)[0];
+    return allCategories.filter((c) => c.title === title)[0].images;
   };
 
   const getTitles = () => {
-    return datas.map((i) => i.title);
+    return allCategories.map((c) => c.title);
   };
 
   return (
     <React.Fragment>
       <MainNav
-        titles={datas}
-        setTitles={setDatas}
-        title={title}
-        setTitle={setTitle}
+        categories={allCategories}
+        addTitle={addCategory}
+        currentTitle={currentTitle}
+        setCurrentTitle={setCurrentTitle}
       />
-      {title !== "All" && title && (
-        <DeleteTitle handleDeleteTitle={handleDeleteTitle} />
+      {currentTitle !== mainCategory.title && (
+        <DeleteTitle handleDeleteTitle={deleteCategory} />
       )}
-      {title ? (
-        <Image
-          setData={handleData}
-          data={getDataByTitle(title)}
-          titles={getTitles()}
-        />
-      ) : (
-        <Upload />
-      )}
+      <Image
+        setImage={changeCategory}
+        images={getDataByTitle(currentTitle)}
+        titles={getTitles()}
+        currentTitle={currentTitle}
+      />
     </React.Fragment>
   );
 }

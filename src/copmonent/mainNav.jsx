@@ -1,33 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import Upload from "./Upload";
+import AddTitle from "./AddTitle";
 
-function MainNav({ titles, setTitles, title, setTitle }) {
+function MainNav({ categories, addTitle, currentTitle, setCurrentTitle }) {
   const logo = "Myl";
-  const [input, setInput] = useState("");
 
-  const onInputChange = ({ currentTarget: input }) => {
-    setInput(input.value);
+  const handleClick = (t) => {
+    setCurrentTitle(t);
   };
-
-  const submitTitle = (e) => {
-    e.preventDefault();
-    if (!input) {
-      return;
-    }
-
-    // setTitles([...titles, { title: input, data: [] }]);
-    setTitles({ title: input, data: [] });
-    setInput("");
-  };
-
-  //   console.log(titles);
-
-  const handleTitle = (t) => {
-    setTitle(t);
-  };
-
-  let id = 1;
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light">
@@ -35,42 +15,31 @@ function MainNav({ titles, setTitles, title, setTitle }) {
         {logo}
       </p>
       <ul className="navbar-nav mr-auto">
-        {/* {titles.length <= 1 && <Upload />} */}
         <Upload />
-        {titles.map((t) => {
+        {categories.map((category) => {
           return (
             <li
-              key={id++}
+              key={category.title}
               className={
-                t.title === title ? "nav-item my-2 active" : "nav-item my-2"
+                category.title === currentTitle
+                  ? "nav-item my-2 active"
+                  : "nav-item my-2"
               }
             >
-              <Link
-                className="nav-link"
-                to={`/${t.title}`}
-                onClick={() => handleTitle(t.title)}
+              <p
+                className="nav-link my-auto pointer"
+                onClick={() => handleClick(category.title)}
               >
-                {t.title}
+                {category.title}
                 <span className="badge badge-primary badge-pill">
-                  {t.data.length}
+                  {category.images.length}
                 </span>
-              </Link>
+              </p>
             </li>
           );
         })}
       </ul>
-      <form className="form my-2 my-lg-0" onSubmit={submitTitle}>
-        <input
-          className="mx-2 my-lg-0"
-          type="text"
-          placeholder="Enter title"
-          value={input}
-          onChange={onInputChange}
-        />
-        <button className="btn btn-outline-success" type="submit">
-          ADD
-        </button>
-      </form>
+      <AddTitle addTitle={addTitle} />
     </nav>
   );
 }

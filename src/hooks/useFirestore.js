@@ -2,7 +2,8 @@ const { useState, useEffect } = require("react");
 const { projectDB } = require("../firebase/config");
 
 export default function useFirestore(collection) {
-  const [docs, steDocs] = useState([]);
+  const [docs, setDocs] = useState([]);
+  const [lastImg, setLastImg] = useState([]);
 
   useEffect(() => {
     const unsub = projectDB
@@ -13,11 +14,12 @@ export default function useFirestore(collection) {
         snap.forEach((doc) => {
           document.push({ ...doc.data(), id: doc.id });
         });
-        steDocs(document);
+        setDocs(document);
+        setLastImg(docs[0]);
       });
 
     return () => unsub();
   }, [collection]);
 
-  return { docs };
+  return { docs, lastImg };
 }
