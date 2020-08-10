@@ -33,7 +33,7 @@ export default function AddTitle({ addTitle, titles }) {
         <button className="btn btn-outline-success" type="submit">
           ADD
         </button>
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
       </form>
     </>
   );

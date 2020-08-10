@@ -52,6 +52,12 @@ select {
   height: 70px;
 }
 
+.error {
+  margin: 3px 90px 0 8px;
+  background-color: tomato;
+  border-radius: 6px;
+}
+
 .popup {
   position: fixed;
   top: 0;
