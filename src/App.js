@@ -2,33 +2,34 @@ import React, { useState, useEffect } from "react";
 import useFirestore from "./hooks/useFirestore";
 import MainNav from "./copmonent/mainNav";
 import Image from "./copmonent/image";
-import DeleteTitle from "./copmonent/deleteTitle";
+import DelOrEmptyBtn from "./copmonent/DelOrEmptyBtn";
 import "./App.css";
 
 function App() {
-  const { docs: imgDB, lastImg: lastImgDB } = useFirestore("All");
+  const { docs: imgDB } = useFirestore("All");
   const [mainCategory, setMainCategory] = useState({
     title: "All",
     images: imgDB,
   });
   const [userCategories, setUserCategories] = useState([]);
   const [currentTitle, setCurrentTitle] = useState(mainCategory.title);
-  const allCategories = [mainCategory, ...userCategories];
+  let allCategories = [mainCategory, ...userCategories];
 
   useEffect(() => {
     const imageInMainCategory = mainCategory.images.length;
     const lastImage = mainCategory.images[imageInMainCategory - 1];
+    const lastImgDB = imgDB[0];
 
     if (!imageInMainCategory) {
-      setMainCategory({ title: "All", images: imgDB });
+      setMainCategory({ title: mainCategory.title, images: imgDB });
     } else if (lastImgDB && lastImgDB.id !== lastImage.id) {
       const newImg = lastImgDB;
       setMainCategory({
-        title: "All",
+        title: mainCategory.title,
         images: [...mainCategory.images, newImg],
       });
     }
-  }, [lastImgDB]);
+  }, [imgDB]);
 
   const addCategory = (title) => {
     const titleExist = allCategories.filter((c) => c.title === title)[0];
@@ -57,18 +58,29 @@ function App() {
     setUserCategories(newCategories);
   };
 
-  function deleteCategory() {
+  const deleteCategory = () => {
+    emptyCategory();
+
+    const newData = userCategories.filter((t) => t.title !== currentTitle);
+
+    setCurrentTitle(mainCategory.title);
+    setUserCategories(newData);
+  };
+
+  const emptyCategory = () => {
     getDataByTitle(currentTitle).map((img) =>
       allCategories[0].images.push(img)
     );
 
     const newData = allCategories
-      .filter((t) => t.title !== currentTitle)
+      .map((c) =>
+        c.title === currentTitle ? { title: c.title, images: [] } : c
+      )
       .filter((t) => (t.title !== mainCategory.title ? t : setMainCategory(t)));
 
-    setCurrentTitle(mainCategory.title);
     setUserCategories(newData);
-  }
+    return newData;
+  };
 
   const getDataByTitle = (title) => {
     return allCategories.filter((c) => c.title === title)[0].images;
@@ -88,7 +100,10 @@ function App() {
         titles={getTitles()}
       />
       {currentTitle !== mainCategory.title && (
-        <DeleteTitle handleDeleteTitle={deleteCategory} />
+        <DelOrEmptyBtn
+          handleEmptyTitle={emptyCategory}
+          handleDeleteTitle={deleteCategory}
+        />
       )}
       <Image
         setImage={changeCategory}
