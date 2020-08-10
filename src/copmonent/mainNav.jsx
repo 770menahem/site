@@ -2,7 +2,13 @@ import React from "react";
 import Upload from "./Upload";
 import AddTitle from "./AddTitle";
 
-function MainNav({ categories, addTitle, currentTitle, setCurrentTitle }) {
+function MainNav({
+  categories,
+  addTitle,
+  currentTitle,
+  setCurrentTitle,
+  titles,
+}) {
   const logo = "Myl";
 
   const handleClick = (t) => {
@@ -39,7 +45,7 @@ function MainNav({ categories, addTitle, currentTitle, setCurrentTitle }) {
           );
         })}
       </ul>
-      <AddTitle addTitle={addTitle} />
+      <AddTitle addTitle={addTitle} titles={titles} />
     </nav>
   );
 }

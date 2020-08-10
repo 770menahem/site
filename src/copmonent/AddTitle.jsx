@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
-export default function AddTitle({ addTitle }) {
+export default function AddTitle({ addTitle, titles }) {
   const [input, setInput] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
     setInput(input.value);
+    setError("");
   };
 
   const onSubmit = (e) => {
@@ -12,22 +14,27 @@ export default function AddTitle({ addTitle }) {
 
     if (!input) return;
 
+    if (titles.includes(input)) return setError(`${input} already exist`);
+
     addTitle(input);
     setInput("");
   };
 
   return (
-    <form className="form my-2 my-lg-0" onSubmit={onSubmit}>
-      <input
-        className="mx-2 my-lg-0"
-        type="text"
-        placeholder="Enter title"
-        value={input}
-        onChange={handleChange}
-      />
-      <button className="btn btn-outline-success" type="submit">
-        ADD
-      </button>
-    </form>
+    <>
+      <form className="form my-2 my-lg-0" onSubmit={onSubmit}>
+        <input
+          className="mx-2 my-lg-0"
+          type="text"
+          placeholder="Enter title"
+          value={input}
+          onChange={handleChange}
+        />
+        <button className="btn btn-outline-success" type="submit">
+          ADD
+        </button>
+        {error && <p>{error}</p>}
+      </form>
+    </>
   );
 }

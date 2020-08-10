@@ -31,6 +31,10 @@ function App() {
   }, [lastImgDB]);
 
   const addCategory = (title) => {
+    const titleExist = allCategories.filter((c) => c.title === title)[0];
+
+    if (titleExist) return;
+
     const newCategory = { title: title, images: [] };
     setUserCategories([...userCategories, newCategory]);
   };
@@ -81,6 +85,7 @@ function App() {
         addTitle={addCategory}
         currentTitle={currentTitle}
         setCurrentTitle={setCurrentTitle}
+        titles={getTitles()}
       />
       {currentTitle !== mainCategory.title && (
         <DeleteTitle handleDeleteTitle={deleteCategory} />
@@ -91,6 +96,7 @@ function App() {
         titles={getTitles()}
         currentTitle={currentTitle}
       />
+      )
     </React.Fragment>
   );
 }
