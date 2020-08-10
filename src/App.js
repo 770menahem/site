@@ -41,9 +41,9 @@ function App() {
   };
 
   const changeCategory = (img, newCategory) => {
-    const removeFrom = getDataByTitle(currentTitle).filter((i) => i !== img);
+    const removeFrom = getImagesByTitle(currentTitle).filter((i) => i !== img);
 
-    const addedTo = getDataByTitle(newCategory);
+    const addedTo = getImagesByTitle(newCategory);
     addedTo.push(img);
 
     const newCategories = allCategories
@@ -70,7 +70,7 @@ function App() {
   };
 
   const emptyCategory = () => {
-    getDataByTitle(currentTitle).map((img) =>
+    getImagesByTitle(currentTitle).map((img) =>
       allCategories[0].images.push(img)
     );
 
@@ -83,7 +83,7 @@ function App() {
     setUserCategories(newUserCategory);
   };
 
-  const getDataByTitle = (title) => {
+  const getImagesByTitle = (title) => {
     return allCategories.filter((c) => c.title === title)[0].images;
   };
 
@@ -102,17 +102,16 @@ function App() {
       />
       {currentTitle !== mainCategory.title && (
         <DelOrEmptyBtn
-          handleEmptyTitle={emptyCategory}
-          handleDeleteTitle={deleteCategory}
+          handleEmptyCategory={emptyCategory}
+          handleDeleteCategory={deleteCategory}
         />
       )}
       <Image
         setImage={changeCategory}
-        images={getDataByTitle(currentTitle)}
+        images={getImagesByTitle(currentTitle)}
         titles={getTitles()}
         currentTitle={currentTitle}
       />
-      )
     </React.Fragment>
   );
 }
