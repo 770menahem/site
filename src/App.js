@@ -61,10 +61,12 @@ function App() {
   const deleteCategory = () => {
     emptyCategory();
 
-    const newData = userCategories.filter((t) => t.title !== currentTitle);
+    const newUserCategory = userCategories.filter(
+      (t) => t.title !== currentTitle
+    );
 
     setCurrentTitle(mainCategory.title);
-    setUserCategories(newData);
+    setUserCategories(newUserCategory);
   };
 
   const emptyCategory = () => {
@@ -72,14 +74,13 @@ function App() {
       allCategories[0].images.push(img)
     );
 
-    const newData = allCategories
+    const newUserCategory = allCategories
       .map((c) =>
         c.title === currentTitle ? { title: c.title, images: [] } : c
       )
       .filter((t) => (t.title !== mainCategory.title ? t : setMainCategory(t)));
 
-    setUserCategories(newData);
-    return newData;
+    setUserCategories(newUserCategory);
   };
 
   const getDataByTitle = (title) => {
